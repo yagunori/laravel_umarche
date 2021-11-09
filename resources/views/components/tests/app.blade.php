@@ -25,7 +25,7 @@
             <header>
                
     
-                    {{ $header ?? '' }}
+                    {{ $header }}
                 
             </header>
 

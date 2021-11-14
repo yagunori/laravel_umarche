@@ -1,8 +1,5 @@
 <?php
 
-
-// use App\Http\Controllers\ComponentTestController;
-// use App\Http\Controllers\LifeCycleTestController;
 use App\Http\Controllers\Owner\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Owner\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Owner\Auth\EmailVerificationNotificationController;
@@ -15,8 +12,6 @@ use App\Http\Controllers\Owner\ShopController;
 use App\Http\Controllers\Owner\ImageController;
 use Illuminate\Support\Facades\Route;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,31 +22,22 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('owner.welcome');
-});
-
-Route::prefix('shops')
-->middleware('auth:owners')->group(function(){
-  Route::get('index', [ShopController::class, 'index'])->name('shops.index');
-  Route::get('edit/{shop}', [ShopController::class, 'edit'])->name('shops.edit');
-  Route::post('update/{shop}', [ShopController::class, 'update'])->name('shops.update');
+// Route::get('/', function () {
+//     return view('welcome');
+Route::prefix('shops')->
+    middleware('auth:owners')->group(function(){
+        Route::get('index', [ShopController::class, 'index'])->name('shops.index');
+        Route::get('edit/{shop}', [ShopController::class, 'edit'])->name('shops.edit');
+        Route::post('update/{shop}', [ShopController::class, 'update'])->name('shops.update');
 });
 
 Route::resource('images', ImageController::class)
 ->middleware('auth:owners')->except(['show']);
 
+
 Route::get('/dashboard', function () {
     return view('owner.dashboard');
 })->middleware(['auth:owners'])->name('dashboard');
-
-Route::get('/component-test1', [ComponentTestController::class, 'showComponent1']);
-Route::get('/component-test2', [ComponentTestController::class, 'showComponent2']);
-Route::get('/servicecontainertest', [LifeCycleTestController::class, 'showServiceContainerTest']);
-Route::get('/serviceprovidertest', [LifeCycleTestController::class, 'showServiceProviderTest']);
-
-
 
 
 Route::get('/register', [RegisteredUserController::class, 'create'])

@@ -1,8 +1,5 @@
 <?php
 
-
-use App\Http\Controllers\ComponentTestController;
-use App\Http\Controllers\LifeCycleTestController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Admin\Auth\EmailVerificationNotificationController;
@@ -11,10 +8,7 @@ use App\Http\Controllers\Admin\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\Auth\VerifyEmailController;
-use App\Http\Controllers\Admin\OwnersController;
 use Illuminate\Support\Facades\Route;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -26,30 +20,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-// Route::get('/', function () {
-//     return view('admin.welcome');
-// });
-
-Route::resource('owners', OwnersController::class)
-->middleware('auth:admin')->except(['show']);
-
-Route::prefix('expired-owners')
-->middleware('auth:admin')->group(function(){
-  Route::get('index', [OwnersController::class, 'expiredOwnerIndex'])->name('expired-owners.index');
-  Route::post('destroy/{owner}', [OwnersController::class, 'expiredOwnerDestroy'])->name('expired-owners.destroy');
+Route::get('/', function () {
+    return view('user.welcome');
 });
 
 Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth:admin'])->name('dashboard');
-
-// Route::get('/component-test1', [ComponentTestController::class, 'showComponent1']);
-// Route::get('/component-test2', [ComponentTestController::class, 'showComponent2']);
-// Route::get('/servicecontainertest', [LifeCycleTestController::class, 'showServiceContainerTest']);
-// Route::get('/serviceprovidertest', [LifeCycleTestController::class, 'showServiceProviderTest']);
-
-
+    return view('user.dashboard');
+})->middleware(['auth:users'])->name('dashboard');
 
 
 Route::get('/register', [RegisteredUserController::class, 'create'])
@@ -83,24 +60,24 @@ Route::post('/reset-password', [NewPasswordController::class, 'store'])
                 ->name('password.update');
 
 Route::get('/verify-email', [EmailVerificationPromptController::class, '__invoke'])
-                ->middleware('auth:admin')
+                ->middleware('auth:users')
                 ->name('verification.notice');
 
 Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-                ->middleware(['auth:admin', 'signed', 'throttle:6,1'])
+                ->middleware(['auth:users', 'signed', 'throttle:6,1'])
                 ->name('verification.verify');
 
 Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-                ->middleware(['auth:admin', 'throttle:6,1'])
+                ->middleware(['auth:users', 'throttle:6,1'])
                 ->name('verification.send');
 
 Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show'])
-                ->middleware('auth:admin')
+                ->middleware('auth:users')
                 ->name('password.confirm');
 
 Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store'])
-                ->middleware('auth:admin');
+                ->middleware('auth:users');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->middleware('auth:admin')
+                ->middleware('auth:users')
                 ->name('logout');

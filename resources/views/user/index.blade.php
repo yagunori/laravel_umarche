@@ -5,7 +5,25 @@
             商品一覧
         </h2>
         <form method="get" action="{{ route('user.items.index') }}">
-          <div class="flex">
+          <div class="lg:flex lg:justify-around">
+            <div class="lg:flex items-center">
+              <select name="category" class="mb-2 lg:mb-0 lg:mr-2" id="">
+                <option value="0" @if(\Request::get('category') === '0') selected @endif>全て</option>
+                @foreach($categories as $category)
+                  <optgroup label="{{ $category->name }}">
+                    @foreach($category->secondary as $secondary)
+                    <option value="{{ $secondary->id }}" @if(\Request::get('category') == $secondary->id) selected @endif>
+                    {{ $secondary->name }}
+                    </option>
+                    @endforeach
+                  @endforeach
+              </select>
+              <div class="flex space-x-2 items-center">
+                <div><input name="keyword" class="border border-gray-500 py-2" type="text" placeholder="キーワードを入力してください"></div>
+                <div><button class="ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">検索する</button></div>
+              </div>
+            </div>
+            <div class="flex">
             <div>
                 <span class="text-sm">表示順</span><br>
               <select id="sort" name="sort" class="mr-4">
@@ -25,7 +43,7 @@
                 </select>
             </div>
           </div>
-        
+        </div>
       </form>
   </x-slot>
 
